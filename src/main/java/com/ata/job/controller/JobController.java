@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ata.job.dto.JobData;
 import com.ata.job.model.Gender;
 import com.ata.job.model.Job;
+import com.ata.job.service.JobService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,23 +26,13 @@ public class JobController {
 	@Autowired
 	JobData jobData;
 	
+	@Autowired
+	JobService jobService;
+	
 	@GetMapping
 	public JobData JobList() {
-		List<Job> jobList = new ArrayList<Job>();
-		jobList.add(new Job("Developer",Gender.Male,20000.56));
-		jobList.add(new Job("Senior Developer",Gender.Male,20000.56));
-		jobList.add(new Job("Manager",Gender.Male,20000.56));
-		jobList.add(new Job("HR Manager",Gender.Male,20000.56));
-		jobList.add(new Job("Secretary",Gender.Male,20000.56));
-		jobList.add(new Job("Assistance",Gender.Male,20000.56));
-		jobList.add(new Job("DevOps",Gender.Male,20000.56));
-		jobList.add(new Job("Scrum Master",Gender.Male,20000.56));
-		jobList.add(new Job("Role Operator",Gender.Male,20000.56));
-		jobList.add(new Job("Chairman",Gender.Male,20000.56));
-		jobList.add(new Job("CEO",Gender.Male,20000.56));
-		
+		List<Job> jobList = jobService.getJobList();
 		Job[] jobArr = new Job[jobList.size()];
-		
 		jobArr = jobList.toArray(jobArr);
 		jobData.setJobList(jobArr);
 		jobData.setResponseMessage("Get Job List");
@@ -51,13 +44,16 @@ public class JobController {
 			@RequestParam(value="gender" , required=false) String gender,
 			@RequestParam(value="salary" , required=false) String salary) {
 		log.info(""+jobTitle +" -> " +salary+" -> " +gender);
-		List<Job> jobList = new ArrayList<Job>();
-		
-		Job[] jobArr = new Job[jobList.size()];
-		
-		jobArr = jobList.toArray(jobArr);
-		jobData.setJobList(jobArr);
-		jobData.setResponseMessage("Get Job List");
+		try {
+			boolean ret = jobService.dataFilter(jobTitle, gender, salary);
+			
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return jobData;
 	}
 }
