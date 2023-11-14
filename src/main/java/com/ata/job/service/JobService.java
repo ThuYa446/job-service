@@ -11,6 +11,6 @@ public interface JobService {
 
 	void getFilterValues(String jobTitle, String gender, String salary);
 	
-	boolean dataFilter(String jobTitle,String gender,String salary) throws JsonMappingException, JsonProcessingException;
+	List<Job> dataFilter(String jobTitle,String gender,String salary) throws JsonMappingException, JsonProcessingException;
 
 }

@@ -1,6 +1,5 @@
 package com.ata.job.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ata.job.dto.JobData;
-import com.ata.job.model.Gender;
 import com.ata.job.model.Job;
 import com.ata.job.service.JobService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,8 +43,16 @@ public class JobController {
 			@RequestParam(value="salary" , required=false) String salary) {
 		log.info(""+jobTitle +" -> " +salary+" -> " +gender);
 		try {
-			boolean ret = jobService.dataFilter(jobTitle, gender, salary);
-			
+			List<Job> filterJobList = jobService.dataFilter(jobTitle, gender, salary);
+			if(!filterJobList.isEmpty()) {
+				Job[] jobArr = new Job[filterJobList.size()];
+				jobArr = filterJobList.toArray(jobArr);
+				jobData.setJobList(jobArr);
+				log.info("Filtered Job List -> "+jobData.getJobList());
+				jobData.setResponseMessage("Job List Fetched Successfully.");
+			}else {
+				jobData.setResponseMessage("0014");
+			}
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
