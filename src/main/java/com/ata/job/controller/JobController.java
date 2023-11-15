@@ -43,15 +43,16 @@ public class JobController {
 			@RequestParam(value="salary" , required=false) String salary) {
 		log.info(""+jobTitle +" -> " +salary+" -> " +gender);
 		try {
-			List<Job> filterJobList = jobService.dataFilter(jobTitle, gender, salary);
+			List<Job> filterJobList = jobService.dataFilterSorting(jobTitle, gender, salary);
 			if(!filterJobList.isEmpty()) {
 				Job[] jobArr = new Job[filterJobList.size()];
 				jobArr = filterJobList.toArray(jobArr);
 				jobData.setJobList(jobArr);
-				log.info("Filtered Job List -> "+jobData.getJobList());
+				//log.info("Filtered Job List -> "+jobData.getJobList());
 				jobData.setResponseMessage("Job List Fetched Successfully.");
 			}else {
-				jobData.setResponseMessage("0014");
+				jobData.setJobList(new Job[0]);
+				jobData.setResponseMessage("There is no job data.");
 			}
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
