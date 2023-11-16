@@ -17,9 +17,6 @@ import com.ata.job.util.FilterSearch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class JobServiceImpl implements JobService {
 
